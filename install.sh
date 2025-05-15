@@ -2,6 +2,26 @@
 
 echo "🚀 Setting up Video Background Removal Tool..."
 
+# Check if we're running on a system with apt-get
+if command -v apt-get &> /dev/null; then
+    echo "📦 Installing system dependencies for OpenCV..."
+    # Install system dependencies required by OpenCV
+    apt-get update
+    apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6
+elif command -v yum &> /dev/null; then
+    echo "📦 Installing system dependencies for OpenCV..."
+    # For RedHat/CentOS/Fedora
+    yum install -y mesa-libGL libXext libSM libXrender
+elif command -v pacman &> /dev/null; then
+    echo "📦 Installing system dependencies for OpenCV..."
+    # For Arch Linux
+    pacman -S --noconfirm mesa libxext libsm libxrender
+else
+    echo "⚠️ Unable to automatically install system dependencies."
+    echo "Please install the equivalent of libgl1-mesa-glx and other X11 libraries for your system."
+    echo "For example, on Ubuntu/Debian: apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6"
+fi
+
 # Check if conda is installed
 if ! command -v conda &> /dev/null; then
     echo "🔍 Conda not found. Installing Miniconda..."
@@ -101,6 +121,15 @@ The launch script will:
 - Start Streamlit on port 7860
 - Create a public cloudflared link that you can share with anyone
 - Show you the public URL in the terminal
+
+⚠️ Note: If you see errors about missing libraries when running the app,
+   you may need to install additional system dependencies:
+   
+   For Ubuntu/Debian:
+   sudo apt-get install -y libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6
+   
+   For CentOS/RHEL/Fedora:
+   sudo yum install -y mesa-libGL libXext libSM libXrender
 
 Enjoy removing video backgrounds! 🎬
 "
